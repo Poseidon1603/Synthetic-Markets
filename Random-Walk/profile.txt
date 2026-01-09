@@ -3,14 +3,13 @@ Flat profile:
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  ms/call  ms/call  name    
- 70.00      0.14     0.14  4320000     0.00     0.00  random_sample(double, double)
- 20.00      0.18     0.04        5     8.00     8.00  check_increment_mean(std::basic_ifstream<char, std::char_traits<char> >&)
-  5.00      0.19     0.01        5     2.00    38.00  random_walk(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)
-  5.00      0.20     0.01                             _init
-  0.00      0.20     0.00    35254     0.00     0.00  std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::_M_gen_rand()
-  0.00      0.20     0.00        2     0.00     0.00  frame_dummy
-  0.00      0.20     0.00        1     0.00     0.00  delete_previous(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)
-  0.00      0.20     0.00        1     0.00     0.00  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose()
+ 33.33      0.03     0.03  4320000     0.00     0.00  random_sample(double, double)
+ 33.33      0.06     0.03        5     6.00    18.00  random_walk(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)
+ 33.33      0.09     0.03        5     6.00     6.00  check_increment_mean(std::basic_ifstream<char, std::char_traits<char> >&)
+  0.00      0.09     0.00    35266     0.00     0.00  std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::_M_gen_rand()
+  0.00      0.09     0.00        3     0.00     0.00  frame_dummy
+  0.00      0.09     0.00        1     0.00     0.00  delete_previous(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)
+  0.00      0.09     0.00        1     0.00     0.00  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose()
 
  %         the percentage of the total running time of the
 time       program used by this function.
@@ -48,42 +47,39 @@ notice and this notice are preserved.
 		     Call graph (explanation follows)
 
 
-granularity: each sample hit covers 4 byte(s) for 5.00% of 0.20 seconds
+granularity: each sample hit covers 4 byte(s) for 11.11% of 0.09 seconds
 
 index % time    self  children    called     name
                                                  <spontaneous>
-[1]     95.0    0.00    0.19                 main [1]
-                0.01    0.18       5/5           random_walk(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [2]
-                0.00    0.00       2/2           frame_dummy [6]
-                0.00    0.00       1/1           delete_previous(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [13]
-                0.00    0.00       1/1           std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose() [14]
+[1]    100.0    0.00    0.09                 main [1]
+                0.03    0.06       5/5           random_walk(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [2]
+                0.00    0.00       3/3           frame_dummy [5]
+                0.00    0.00       1/1           std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose() [13]
+                0.00    0.00       1/1           delete_previous(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [12]
 -----------------------------------------------
-                0.01    0.18       5/5           main [1]
-[2]     95.0    0.01    0.18       5         random_walk(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [2]
-                0.14    0.00 4320000/4320000     random_sample(double, double) [3]
-                0.04    0.00       5/5           check_increment_mean(std::basic_ifstream<char, std::char_traits<char> >&) [4]
+                0.03    0.06       5/5           main [1]
+[2]    100.0    0.03    0.06       5         random_walk(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [2]
+                0.03    0.00 4320000/4320000     random_sample(double, double) [3]
+                0.03    0.00       5/5           check_increment_mean(std::basic_ifstream<char, std::char_traits<char> >&) [4]
 -----------------------------------------------
-                0.14    0.00 4320000/4320000     random_walk(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [2]
-[3]     70.0    0.14    0.00 4320000         random_sample(double, double) [3]
-                0.00    0.00   35254/35254       std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::_M_gen_rand() [12]
+                0.03    0.00 4320000/4320000     random_walk(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [2]
+[3]     33.3    0.03    0.00 4320000         random_sample(double, double) [3]
+                0.00    0.00   35266/35266       std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::_M_gen_rand() [11]
 -----------------------------------------------
-                0.04    0.00       5/5           random_walk(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [2]
-[4]     20.0    0.04    0.00       5         check_increment_mean(std::basic_ifstream<char, std::char_traits<char> >&) [4]
+                0.03    0.00       5/5           random_walk(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [2]
+[4]     33.3    0.03    0.00       5         check_increment_mean(std::basic_ifstream<char, std::char_traits<char> >&) [4]
 -----------------------------------------------
-                                                 <spontaneous>
-[5]      5.0    0.01    0.00                 _init [5]
+                0.00    0.00       3/3           main [1]
+[5]      0.0    0.00    0.00       3         frame_dummy [5]
 -----------------------------------------------
-                0.00    0.00       2/2           main [1]
-[6]      0.0    0.00    0.00       2         frame_dummy [6]
------------------------------------------------
-                0.00    0.00   35254/35254       random_sample(double, double) [3]
-[12]     0.0    0.00    0.00   35254         std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::_M_gen_rand() [12]
+                0.00    0.00   35266/35266       random_sample(double, double) [3]
+[11]     0.0    0.00    0.00   35266         std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::_M_gen_rand() [11]
 -----------------------------------------------
                 0.00    0.00       1/1           main [1]
-[13]     0.0    0.00    0.00       1         delete_previous(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [13]
+[12]     0.0    0.00    0.00       1         delete_previous(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [12]
 -----------------------------------------------
                 0.00    0.00       1/1           main [1]
-[14]     0.0    0.00    0.00       1         std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose() [14]
+[13]     0.0    0.00    0.00       1         std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose() [13]
 -----------------------------------------------
 
  This table describes the call tree of the program, and was sorted by
@@ -176,6 +172,6 @@ notice and this notice are preserved.
 
 Index by function name
 
-   [2] random_walk(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [4] check_increment_mean(std::basic_ifstream<char, std::char_traits<char> >&) [5] _init
-   [3] random_sample(double, double) [12] std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::_M_gen_rand() [6] frame_dummy
-  [13] delete_previous(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [14] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose()
+   [2] random_walk(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [4] check_increment_mean(std::basic_ifstream<char, std::char_traits<char> >&) [5] frame_dummy
+   [3] random_sample(double, double) [11] std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::_M_gen_rand()
+  [12] delete_previous(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [13] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose()
