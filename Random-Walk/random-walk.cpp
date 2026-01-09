@@ -24,7 +24,7 @@ int check_increment_mean(ifstream& f) {
     }
 
     if (sum.empty()) {
-        cout << "Sum vector is empty" << endl;
+        cout << "Sum vector is empty" << '\n';
     }
 
     double total = 0;
@@ -89,7 +89,7 @@ void delete_previous(string filename) {
 
 int main(int argc, const char *argv[]) {
     if (argc == 1) {
-        cout << "Give me how long you want data for pls" << endl;
+        cout << "Give me how long you want data for pls" << '\n';
     } else if (argc == 2) {
         // If the file already exists delete it
         cout << "Deleting Previous Attempts" << '\n';
