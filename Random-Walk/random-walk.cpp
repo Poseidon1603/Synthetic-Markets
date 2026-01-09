@@ -50,11 +50,9 @@ int random_walk(string f, string days) {
     string fileName = ("log/" + f + ".csv");
     fstream file(fileName, ios::app);
     double price = 0;
-    // This is duration in days converted into seconds
-    double duration = stod(days) * (24 * 60 * 60);
     // for every second we want to generate some data from the pdf function
     double incr_value;
-    for (int i = 0; i < duration; i++) {
+    for (int i = 0; i < (stod(days) * (24 * 60 * 60)); i++) {
         incr_value = random_sample(0,0.08);
         price += incr_value;
         file << price << "," << incr_value << '\n';

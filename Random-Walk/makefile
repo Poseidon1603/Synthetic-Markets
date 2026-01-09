@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -O3 -march=native -Wall -Wextra -Wshadow -std=c++23 -g
+CXXFLAGS = -O3 -march=native -Wall -Wextra -Wshadow -std=c++23 -pg
 
 %: %.cpp
 	$(CXX) $(CXXFLAGS) $< -o $@
