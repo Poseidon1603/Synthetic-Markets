@@ -5,7 +5,6 @@
 #include <sys/stat.h>
 #include <filesystem>
 #include <string>
-#include <iostream>
 
 using namespace std;
 namespace fs = filesystem;
@@ -39,16 +38,16 @@ int check_increment_mean(ifstream& f) {
     return !(round(mean));
 }
 
-double random_sample(double mean = 0, double stdev = 0.5) {
+double random_sample(double mean = 0, double stdev = 0.08) {
     static mt19937 rng{random_device{}()};
     normal_distribution<double> dist(mean,stdev);
     return dist(rng);
 }
 
 // Takes in a file name and a makes a random walk 
-int random_walk(string f, string days) {
-    string fileName = ("log/" + f + ".csv");
-    fstream file(fileName, ios::app);
+int random_walk(string fileName, string days) {
+    string fullFileName = ("log/" + fileName + ".csv");
+    fstream file(fullFileName, ios::app);
     double price = 0;
     // for every second we want to generate some data from the pdf function
     double incr_value;
@@ -57,22 +56,14 @@ int random_walk(string f, string days) {
         price += incr_value;
         file << price << "," << incr_value << '\n';
     }
-
     file.close();
-
-    ifstream readFile(fileName);
+    ifstream readFile(fullFileName);
     // Check the mean of the increments
     if (!check_increment_mean(readFile)) {
         cout << "Mean is not approx 0" << '\n';
         return -1;
     }
     return 0;
-}
-
-// Checks if a file exists
-int file_exist(string name) {
-    struct stat buffer;   
-    return (stat (name.c_str(), &buffer) == 0);
 }
 
 void delete_previous(string filename) {
