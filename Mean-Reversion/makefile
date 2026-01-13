@@ -1,8 +1,8 @@
 CXX = g++
-CXXFLAGS = -O3 -march=native -Wall -Wextra -Wshadow -std=c++23 -pg
+CXXFLAGS = -O3 -march=native -Wall -Wextra -Wshadow -std=c++23 -g -pg -IUtils
 
 %: %.cpp
-	$(CXX) $(CXXFLAGS) $< -o $@
+	$(CXX) $(CXXFLAGS) $< ../Utils/utils -o $@
 	./$@
 
 clean:
