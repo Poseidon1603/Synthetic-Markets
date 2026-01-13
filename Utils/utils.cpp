@@ -6,8 +6,8 @@
 using namespace std;
 namespace fs = filesystem;
 
-void delete_previous(string filename) {
-    for (const auto& entry : fs::recursive_directory_iterator(".")) {
+void delete_previous(string filename, string directory) {
+    for (const auto& entry : fs::recursive_directory_iterator(directory)) {
         if (!entry.is_regular_file()) continue;
 
         const auto& name = entry.path().filename().string();
