@@ -11,7 +11,11 @@ add_library(Utils STATIC Utils/utils.cpp Utils/utils.h)
 # Function to add regimes automatically
 function(add_regime REGIME_DIR)
     # Gather all cpp files
-    file(GLOB_RECURSE CPP_FILES "${REGIME_DIR}/*.cpp")
+    file(GLOB_RECURSE CPP_FILES RELATIVE ${CMAKE_SOURCE_DIR} "${REGIME_DIR}/*.cpp")
+
+    # Exclude hidden files/folders (.git, .vscode, etc.) and backups (*~)
+    list(FILTER CPP_FILES EXCLUDE REGEX "^${REGIME_DIR}/\\..*")
+    list(FILTER CPP_FILES EXCLUDE REGEX "~$")
 
     # Separate main.cpp if it exists
     set(LIBRARY_SOURCES "")
@@ -40,17 +44,24 @@ endfunction()
 # Scan all subdirectories automatically
 file(GLOB SUBDIRS RELATIVE ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/*)
 foreach(SUBDIR ${SUBDIRS})
-    if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/${SUBDIR} AND NOT SUBDIR STREQUAL "Utils")
+    if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/${SUBDIR} AND NOT SUBDIR STREQUAL "Utils" AND NOT SUBDIR MATCHES "^\\.")
         add_regime(${SUBDIR})
     endif()
 endforeach()
 
 # MainController executable
-add_executable(MainController MainController/main.cpp)
+add_executable(MainController main.cpp)
 # Link all regimes automatically
 foreach(SUBDIR ${SUBDIRS})
-    if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/${SUBDIR} AND NOT SUBDIR STREQUAL "Utils" AND NOT SUBDIR STREQUAL "MainController")
+    if(
+        IS_DIRECTORY ${CMAKE_SOURCE_DIR}/${SUBDIR}
+        AND NOT SUBDIR MATCHES "^\\."      # excludes .git, .vscode
+        AND NOT SUBDIR STREQUAL "Utils"
+        AND NOT SUBDIR STREQUAL "build"
+    )
         target_link_libraries(MainController PRIVATE ${SUBDIR})
     endif()
 endforeach()
+
 target_link_libraries(MainController PRIVATE Utils)
+
