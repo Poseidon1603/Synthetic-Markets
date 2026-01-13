@@ -1,6 +1,6 @@
 #include <iostream>
 #include "../Utils/utils.h"
-
+#include "random-walk.h"
 
 
 int main(int argc, const char *argv[]) {

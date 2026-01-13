@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <filesystem>
 #include <string>
+#include "../Utils/utils.h"
 
 using namespace std;
 namespace fs = filesystem;
@@ -38,12 +39,6 @@ int check_increment_mean(ifstream& f) {
     return !(round(mean));
 }
 
-double random_sample(double mean = 0, double stdev = 0.08) {
-    static mt19937 rng{random_device{}()};
-    normal_distribution<double> dist(mean,stdev);
-    return dist(rng);
-}
-
 // Takes in a file name and a makes a random walk 
 int random_walk(string fileName, string days) {
     string fullFileName = ("log/" + fileName + ".csv");
@@ -65,16 +60,3 @@ int random_walk(string fileName, string days) {
     }
     return 0;
 }
-
-void delete_previous(string filename) {
-    for (const auto& entry : fs::recursive_directory_iterator(".")) {
-        if (!entry.is_regular_file()) continue;
-
-        const auto& name = entry.path().filename().string();
-        if (name.contains(filename)) {
-            remove(entry);
-        }
-    } 
-    return;
-}
-
