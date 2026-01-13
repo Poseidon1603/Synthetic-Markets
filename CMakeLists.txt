@@ -50,7 +50,7 @@ foreach(SUBDIR ${SUBDIRS})
 endforeach()
 
 # MainController executable
-add_executable(MainController main.cpp)
+add_executable(MainExec main.cpp)
 # Link all regimes automatically
 foreach(SUBDIR ${SUBDIRS})
     if(
@@ -59,9 +59,9 @@ foreach(SUBDIR ${SUBDIRS})
         AND NOT SUBDIR STREQUAL "Utils"
         AND NOT SUBDIR STREQUAL "build"
     )
-        target_link_libraries(MainController PRIVATE ${SUBDIR})
+        target_link_libraries(MainExec PRIVATE ${SUBDIR})
     endif()
 endforeach()
 
-target_link_libraries(MainController PRIVATE Utils)
+target_link_libraries(MainExec PRIVATE Utils)
 
