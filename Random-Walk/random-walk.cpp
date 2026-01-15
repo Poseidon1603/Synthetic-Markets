@@ -41,7 +41,7 @@ int check_increment_mean(ifstream& f) {
 
 // Takes in a file name and a makes a random walk 
 int random_walk(string fileName, string days) {
-    string fullFileName = ("../Random-Walk/log/" + fileName + ".csv");
+    string fullFileName = ("../Random-Walk/logs/" + fileName + ".csv");
     fstream file(fullFileName, ios::app);
     double price = 0;
     // for every second we want to generate some data from the pdf function

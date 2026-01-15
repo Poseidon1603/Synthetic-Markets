@@ -10,7 +10,7 @@ int main(int argc, const char *argv[]) {
     } else if (argc == 2) {
         // If the file already exists delete it
         cout << "Deleting Previous Attempts" << '\n';
-        delete_previous("random-walk-log.csv", "../Random-Walk/log/");
+        delete_previous("random-walk-log.csv", "../Random-Walk/logs/");
         // Start 1 random walk
         cout << "Making 1 random walk for " << argv[1] << " days" << '\n';
         x = random_walk("random-walk-log", argv[1]);
@@ -20,7 +20,7 @@ int main(int argc, const char *argv[]) {
     } else if (argc == 3) {
         // Delete files if they already exist
         cout << "Deleting Previous Attempts" << '\n';
-        delete_previous("random-walk-log-", "../Random-Walk/log/");
+        delete_previous("random-walk-log-", "../Random-Walk/logs/");
         // Start n random walks for m days
         cout << "Making " << argv[2] << " random walks for " << argv[1] << " days" << '\n';
         for (int i = 0; i < stoi(argv[2]); i++) {

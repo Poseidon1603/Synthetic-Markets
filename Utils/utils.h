@@ -5,7 +5,7 @@
 using namespace std;
 
 // Given a string, we delete all files in the directory that contain that name
-// Directory is Relative
+// Directory is relative to /build
 void delete_previous(string filename, string directory);
 
 // Gets a random sample from a normal distribution
