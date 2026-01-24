@@ -44,7 +44,7 @@ endfunction()
 # Scan all subdirectories automatically
 file(GLOB SUBDIRS RELATIVE ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/*)
 foreach(SUBDIR ${SUBDIRS})
-    if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/${SUBDIR} AND NOT SUBDIR STREQUAL "Utils" AND NOT SUBDIR MATCHES "^\\.")
+    if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/${SUBDIR} AND NOT SUBDIR STREQUAL "Visuals" AND NOT SUBDIR STREQUAL "Utils" AND NOT SUBDIR MATCHES "^\\.")
         add_regime(${SUBDIR})
     endif()
 endforeach()
@@ -58,6 +58,7 @@ foreach(SUBDIR ${SUBDIRS})
         AND NOT SUBDIR MATCHES "^\\."      # excludes .git, .vscode
         AND NOT SUBDIR STREQUAL "Utils"
         AND NOT SUBDIR STREQUAL "build"
+        AND NOT SUBDIR STREQUAL "Visuals"
     )
         target_link_libraries(MainExec PRIVATE ${SUBDIR})
     endif()

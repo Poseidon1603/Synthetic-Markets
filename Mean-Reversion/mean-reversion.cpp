@@ -10,16 +10,11 @@ bool check_log_mean(istream& file, double mean) {
     string temp;
     cout << "Checking Log Mean" << '\n';
 
-    long unsigned start_index;
     long unsigned end_index;
     while(getline(file,temp)) {
         //0,0,0,0
-        start_index = temp.find("," , (temp.find(",", (temp.find(",") + 1)) + 1)) + 1;
-        end_index = temp.find_last_of(",");
-        cout << temp.substr(start_index) << '\n';
-        temp = temp.substr(start_index, (end_index-start_index));
-        cout << temp << '\n';
-        sum.push_back(stod(temp));
+        end_index = temp.find(",") + 1;
+        sum.push_back(stod(temp.substr(end_index)));
     }
 
     if (sum.empty()) {
@@ -36,9 +31,11 @@ bool check_log_mean(istream& file, double mean) {
     double log_mean = total / sum.size();
 
     if (round(log_mean * 100) == round(mean * 100)) {
+        cout << "Log Mean is Good" << '\n';
         return true;
     }
 
+    cout << "Log mean is cooked" << '\n';
     return false;
 }
 
@@ -49,21 +46,19 @@ int stable_mean_reversion(string fileName, int days, double mean, double mr_spee
     double price = 1;
     // Number of ticks to generate
     int ticks = days * 24 * 60 * 60;
-    double incr_value;
-    double real_price;
     double log_price = log(price);
     // Initial we want to push the starting price of 0 into the file 
     file << price << ",0,0,0" << '\n';
     // Compute the rest of the prices
+    double phi = exp(-mr_speed);
+    double variance = (shocks * shocks) * (1.0 - phi * phi) / (2.0 * mr_speed);
+
     for (int i = 0; i < ticks; i++) {
-        // Work out the increment value
-        incr_value = mr_speed * (mean - log_price) + (shocks * random_sample(0,0.08));
-        // Get the next price
-        log_price += incr_value;
-        real_price = exp(log_price);
-        // Push the real price into the file first
-        // Pushing order: Real Price, Real Increment Value, Log Price, Log Increment Value
-        file << real_price << "," << exp(incr_value) << "," << log_price << "," << incr_value << '\n';
+        double z = random_sample(0.0, 1.0);
+        log_price = mean + (log_price - mean) * phi
+                + sqrt(variance) * z;
+        double real_price = exp(log_price);
+        file << real_price << "," << log_price << '\n';
     }
     file.close();
 
