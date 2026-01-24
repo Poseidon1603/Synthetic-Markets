@@ -109,3 +109,12 @@ For an OU process, Euler-Maruyama systematically distorts:
     (1 - θdt) ^ κ
 
 Usings this, I'm going to rewrite the mean reversion process to use an exact discretization.
+
+
+
+
+
+
+
+
+Some 
