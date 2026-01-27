@@ -110,11 +110,51 @@ For an OU process, Euler-Maruyama systematically distorts:
 
 Usings this, I'm going to rewrite the mean reversion process to use an exact discretization.
 
+### Testing
+
+How can we know if the have produced a mathematically mean reverting model?
+To know we need to preform some sanity checks
+- The mean is equivalent to the log price 
+- Must meet the stability condition  φ = exp(-κdt) 0 <  φ < 1
+- A true mean reverting process is covariance-stationary
+
+### Relevant Info / Defs
+
+### Variance
+&emsp; Variance is a statistical measure of data dispersion, calculating 
+&emsp; the average squared deviation of each data point from the mean
+&emsp; A higher variance indicates that data points are more spread out
+&emsp; from the average, while lower variance indicates that they are
+&emsp; clustered closely
+&emsp; Formula (Population): 
+&emsp;&emsp; σ^2 = (x - μ)^ 2 / n
+&emsp; Formula (Sample):
+&emsp;&emsp; σ^2 = (x - μ)^ 2 / n-1
+&emsp; Variance is another form of autocorrelation
+
+### Standard Deviation
+&emsp; Standard Deviation is a statistical measure that quantifies the 
+&emsp; amount of variation or dispersion in a set of data values relative 
+&emsp; to their mean
+&emsp; In simple people terms its how far each data point tends to be from 
+&emsp; the mean
+&emsp; Formula is the root of the variance 
+&emsp; A smaller standard deviation indicates high consistancy / clustering
+
+### Correlation
+&emsp; A statistical measure expressing the extent of which two variables related linearly and move in coordination with each other.
+&emsp; It indicates the strength and direction of a relationship with values ranging from -1 to 1, where -1 means perfectly negative and 1 means perfectly position and 0 means no correlation
+
+### AutoCorrelation
+&emsp; Measures the linear relationship between a time-series signal or data and a lagged version of itself over successive time intervals
+
+### Covariance
+&emsp; Covariance measures how two random variables change together, indicating the direction of their linear relationship
+
+&emsp; Formula (Population)
+&emsp;&emsp; Cov(X,Y) = (X - μ(x))(y - μ(y)) / N
+
+&emsp; Formula (Sample)
+&emsp;&emsp; Cov(X,Y) = (X - μ(x))(y - μ(y)) / N - 1
 
 
-
-
-
-
-
-Some 

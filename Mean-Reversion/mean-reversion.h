@@ -18,6 +18,7 @@ bool check_log_mean(istream& file, double mean);
 int stable_mean_reversion(string fileName, int days, double mean, double mr_spead, double s_shocks);
 
 
-// No implementation yet 
-// But this will have the mean drift as shocks occur
-int drifting_mean_reversion(int days);
+// Produces a drifting mean reversion in the given file
+void drifting_mean_reversion(string filename, int ticks, double theta, double sigma, double mean_vol, double mean);
+
+double verify_drifting_mean(string fileName);
