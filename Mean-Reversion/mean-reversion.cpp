@@ -5,6 +5,33 @@
 #include "../Utils/utils.h"
 using namespace std;
 
+
+bool verify_variance_stability(const std::vector<double>& residuals) {
+    auto calc_variance = [](const std::vector<double>& data, int start, int end) {
+        double sum = 0, sq_sum = 0;
+        int n = end - start;
+        for (int i = start; i < end; ++i) {
+            sum += data[i];
+            sq_sum += data[i] * data[i];
+        }
+        double mean = sum / n;
+        return (sq_sum / n) - (mean * mean);
+    };
+
+    int chunk = residuals.size() * 0.1; // Check first and last 10%
+    double var_start = calc_variance(residuals, 0, chunk);
+    double var_end = calc_variance(residuals, residuals.size() - chunk, residuals.size());
+
+    cout << "--- Proof 2: Variance Stability ---" << endl;
+    cout << "Start Var: " << var_start << " | End Var: " << var_end << endl;
+    
+    // In a random walk, the ratio would be ~10.0. In MR, it should be ~1.0.
+    double ratio = var_end / var_start;
+    cout << "Variance Ratio: " << ratio << (ratio < 2.0 ? " (STABLE)" : " (UNSTABLE)") << endl;
+    
+    return (ratio < 2.0);
+}
+
 double verify_reversion(const std::vector<double>& path) {
     double sum_x = 0, sum_dx = 0, sum_x_sq = 0, sum_x_dx = 0;
     int n = path.size() - 1;
@@ -22,6 +49,21 @@ double verify_reversion(const std::vector<double>& path) {
     // Solve for Beta using OLS: (n*Σ(xy) - Σx*Σy) / (n*Σ(x^2) - (Σx)^2)
     double beta = (n * sum_x_dx - sum_x * sum_dx) / (n * sum_x_sq - sum_x * sum_x);
     return beta;
+}
+
+double verify_cointegration(const vector<double>& log_prices, const vector<double>& means) {
+    double sum_x = 0, sum_y = 0, sum_xy = 0, sum_x2 = 0, sum_y2 = 0;
+    int n = log_prices.size();
+    for(int i = 0; i < n; i++) {
+        sum_x += log_prices[i]; sum_y += means[i];
+        sum_xy += log_prices[i] * means[i];
+        sum_x2 += log_prices[i] * log_prices[i];
+        sum_y2 += means[i] * means[i];
+    }
+    double corr = (n * sum_xy - sum_x * sum_y) / sqrt((n * sum_x2 - sum_x * sum_x) * (n * sum_y2 - sum_y * sum_y));
+    cout << "--- Proof 3: Cointegration ---" << endl;
+    cout << "Correlation: " << corr << (corr > 0.8 ? " (STRONG)" : " (WEAK)") << endl;
+    return corr;
 }
 
 double verify_drifting_mean(string fileName) {
@@ -48,10 +90,18 @@ double verify_drifting_mean(string fileName) {
 
     // Run OLS Beta check on the residuals
     double beta = verify_reversion(residuals);
-    
+    bool var_stable = verify_variance_stability(residuals);
+    double corr = verify_cointegration(log_prices, means);
+
+    bool beta_pass = (beta < 0);
+    bool corr_pass = (corr > 0.8);
+
     cout << "--- Proof 1: Residual Beta ---" << endl;
     cout << "Residual Beta: " << beta << " (Should be negative)" << endl;
-    return beta;
+    return (beta_pass && var_stable && corr_pass);
+
+
+
 }
 
 bool check_log_mean(istream& file, double target_mean, double expected_theta) {
@@ -153,10 +203,11 @@ void drifting_mean_reversion(string filename, int ticks, double theta, double si
     }
     file.close();
 
-    cout << "verifying drifting mean called" << '\n';
-    if (verify_drifting_mean(filename) < 0) {
+    if (!verify_drifting_mean(filename)) {
+        cout << "Something went wrong" << '\n';
         return;
     }
+    
+    return; 
 
-    cout << "Something went wrong" << '\n';
 }
