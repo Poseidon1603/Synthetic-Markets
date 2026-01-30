@@ -24,3 +24,14 @@ double random_sample(double mean = 0, double stdev = 0.08) {
     normal_distribution<double> dist(mean,stdev);
     return dist(rng);
 }
+// Calculate variance of given data and period
+double calc_variance(const std::vector<double>& data, int start, int end) {
+    double sum = 0, sq_sum = 0;
+    int n = end - start;
+    for (int i = start; i < end; ++i) {
+        sum += data[i];
+        sq_sum += data[i] * data[i];
+    }
+    double mean = sum / n;
+    return (sq_sum / n) - (mean * mean);
+}
