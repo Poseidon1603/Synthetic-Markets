@@ -74,18 +74,7 @@ double test_beta_zero(const std::vector<double>& log_prices) {
 
 
 
-bool check_trend(string fileName) {
-    string fullFilename = "../Trending/logs/" + fileName + ".csv";
-    ifstream file(fullFilename);
-    string tmp;
-    vector<double> log_prices;
-    int index;
-
-    while (getline(file,tmp)) {
-        index = tmp.find(",") + 1; 
-        log_prices.push_back(stod(tmp.substr(index)));
-    }
-
+bool check_trend(vector<double>& log_prices) {
     double beta = test_beta_zero(log_prices);
     double ratio = test_variance_expansion(log_prices);
     double displacement = test_displacement_ratio(log_prices);
@@ -122,8 +111,10 @@ bool check_trend(string fileName) {
 void trending_regime_generator(string filename, int ticks, double drift, double sigma, double start_price) {
     string fullFileName = "../Trending/logs/" + filename + ".csv";
     ofstream file(fullFileName, ios::app);
+    vector<double> prices;
 
     double log_p = log(start_price);
+    prices.push_back(log_p);
     
     // For GBM, the expected log price change is (drift - 0.5 * sigma^2)
     double log_drift = drift - (0.5 * sigma * sigma);
@@ -134,17 +125,19 @@ void trending_regime_generator(string filename, int ticks, double drift, double 
         // The core GBM equation in log-space
         // log_p_t = log_p_{t-1} + drift + noise
         log_p += log_drift + (sigma * z);
+        prices.push_back(log_p);
         
         // time, price, log_price
-        file << exp(log_p) << "," << log_p << '\n';
+        file << exp(log_p) << '\n';
     }
     file.close();
 
     cout << "Running Checks on Output \n";
 
-    if (!check_trend(filename)) {
+    if (!check_trend(prices)) {
         return;
     }
 
+    cout << "All Checks Pass \n";
     return;
 }

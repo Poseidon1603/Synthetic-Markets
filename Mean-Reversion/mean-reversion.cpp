@@ -66,56 +66,27 @@ double verify_cointegration(const vector<double>& log_prices, const vector<doubl
     return corr;
 }
 
-double verify_drifting_mean(string fileName) {
-    vector<double> log_prices; 
-    vector<double> means; 
+double verify_drifting_mean(vector<double>& log_prices, vector<double>& means) {
     vector<double> residuals;
-
-    string path = "../Mean-Reversion/logs/" + fileName + ".csv";
-    ifstream file(path);
-    string line;
-    int first_comma;
-    int last_comma;
-    while (getline(file,line)) {
-        first_comma = line.find(",") + 1;
-        last_comma = line.find_last_of(",") + 1;
-        log_prices.push_back(stod(line.substr(last_comma)));
-        means.push_back(stod(line.substr(0, first_comma)));
-    }
-    file.close();
 
     for(size_t i = 0; i < log_prices.size(); ++i) {
         residuals.push_back(log_prices[i] - means[i]);
     }
-
-    // Run OLS Beta check on the residuals
+    
     double beta = verify_reversion(residuals);
+    cout << "--- Proof 1: Residual Beta ---" << endl;
+    cout << "Residual Beta: " << beta << " (Should be negative)" << endl;
+    // Run OLS Beta check on the residuals
     bool var_stable = verify_variance_stability(residuals);
     double corr = verify_cointegration(log_prices, means);
 
     bool beta_pass = (beta < 0);
     bool corr_pass = (corr > 0.8);
 
-    cout << "--- Proof 1: Residual Beta ---" << endl;
-    cout << "Residual Beta: " << beta << " (Should be negative)" << endl;
     return (beta_pass && var_stable && corr_pass);
-
-
-
 }
 
-bool check_log_mean(istream& file, double target_mean, double expected_theta) {
-    vector<double> prices;
-    string line;
-    
-    // Parse CSV
-    while(getline(file, line)) {
-        size_t comma_pos = line.find(",");
-        if (comma_pos != string::npos) {
-            prices.push_back(stod(line.substr(comma_pos + 1)));
-        }
-    }
-
+bool check_log_mean(vector<double>& prices, double target_mean, double expected_theta) {
     // Calculate Empirical Mean
     double total = 0;
     for (double p : prices) total += p;
@@ -139,15 +110,17 @@ bool check_log_mean(istream& file, double target_mean, double expected_theta) {
     return mean_ok && beta_ok;
 }
 
-int stable_mean_reversion(string fileName, int ticks, double mean, double mr_speed, double shocks) {
+void stable_mean_reversion(string fileName, int ticks, double mean, double mr_speed, double shocks) {
     string fullFileName = "../Mean-Reversion/logs/" + fileName + ".csv";
     fstream file(fullFileName, ios::app);
+    vector<double> log_prices;
     // Starting price
     double price = 1.0;
     // Inital price as a log price
     double log_price = log(price);
+    log_prices.push_back(log_price);
     // Initial we want to push the starting price of 0 into the file 
-    file << price << "," << log_price << '\n';
+    file <<fixed << price <<  '\n';
     
     // Our phi assumes dt = 1
     double phi = exp(-mr_speed);
@@ -155,7 +128,7 @@ int stable_mean_reversion(string fileName, int ticks, double mean, double mr_spe
     // Check our phi value
     if (phi >= 1) {
         cout << "Phi is greater than 1" << '\n';
-        return false;
+        return;
     }
 
     double variance = sqrt((1 - phi * phi) / (2 * mr_speed));
@@ -164,46 +137,50 @@ int stable_mean_reversion(string fileName, int ticks, double mean, double mr_spe
     for (int i = 0; i < ticks; i++) {
         z = random_sample(0,1);
         log_price = mean + ((log_price - mean) * phi) + (shocks * variance * z);
+        log_prices.push_back(log_price);
         price = exp(log_price);
-        file << price << "," << log_price << '\n';
+        file << fixed << price << '\n';
     }
     file.close();
 
     // Now we need to check our values
-    ifstream readFile(fullFileName);
-    if (!check_log_mean(readFile, mean, mr_speed)) {
+    if (!check_log_mean(log_prices, mean, mr_speed)) {
         cout << "Process is cooked" << '\n';
-        return -1;
+        return;
     }
-    return 0;
+    return;
 }
 
 
 void drifting_mean_reversion(string filename, int ticks, double theta, double sigma, double mean_vol, double mean) {
     string fullFileName = "../Mean-Reversion/logs/" + filename + ".csv";
     ofstream file(fullFileName, ios::app);
-
+    vector<double> moving_means;
+    vector<double> log_prices;
     
     double moving_mean = mean;  // Initial mean
     double log_p = moving_mean; // Start at the mean
-    
+    moving_means.push_back(moving_mean);
+    log_prices.push_back(log_p);
+
     double phi = exp(-theta);
     double vol_adj = sqrt((1 - phi * phi) / (2 * theta));
 
     for (int t = 0; t < ticks; ++t) {
         // Update the Mean itself (Random Walk)
         moving_mean += mean_vol * random_sample(0,1); 
-
+        moving_means.push_back(moving_mean);
         // Update the Price (Mean Reverts to the NEW current mean)
         double z = random_sample(0.0,1.0);
         log_p = moving_mean + (log_p - moving_mean) * phi + (sigma * vol_adj * z);
+        log_prices.push_back(log_p);
         
         // current_mean, price , log_price
-        file << moving_mean << "," << exp(log_p) << "," << log_p << "\n";
+        file << fixed << exp(log_p) << "\n";
     }
     file.close();
 
-    if (!verify_drifting_mean(filename)) {
+    if (!verify_drifting_mean(log_prices, moving_means)) {
         cout << "Something went wrong" << '\n';
         return;
     }
