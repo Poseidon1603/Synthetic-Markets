@@ -110,6 +110,47 @@ bool check_log_mean(vector<double>& prices, double target_mean, double expected_
     return mean_ok && beta_ok;
 }
 
+
+vector<double> stable_mean_reversion(int ticks, double mean, double mr_speed, double shocks) {
+    vector<double> log_prices;
+    vector<double> prices;
+
+    // Starting Price
+    double price = 1.0;
+    prices.push_back(price);
+
+    double log_price = log(price);
+    log_prices.push_back(log_price);
+
+    double phi = exp(-mr_speed);
+
+    if (phi >= 1) {
+        cout << "Phi is greater than one, please give a smaller value \n";
+        vector<double> empty = {};
+        return empty;
+    }
+
+    double var = sqrt((1 - phi * phi) / (2 * mr_speed));
+
+    double z = 0;
+
+    for (int t = 0; t < ticks; ++t) {
+        z = random_sample(0,1);
+        log_price = mean + (log_price - mean) * phi + (shocks * var * z);
+        log_prices.push_back(log_price);
+        prices.push_back(exp(log_price));
+    }
+
+    // Check values
+    if (!check_log_mean(log_prices, mean, mr_speed)) {
+        cout << "Something went wrong \n";
+        vector<double> empty = {};
+        return empty;
+    }
+
+    return prices;
+}
+
 void stable_mean_reversion(string fileName, int ticks, double mean, double mr_speed, double shocks) {
     string fullFileName = "../Mean-Reversion/logs/" + fileName + ".csv";
     fstream file(fullFileName, ios::app);
@@ -151,6 +192,46 @@ void stable_mean_reversion(string fileName, int ticks, double mean, double mr_sp
     return;
 }
 
+vector<double> drifting_mean_reversion(int ticks, double theta, double sigma, double mean_vol, double mean) {
+    vector<double> moving_means;
+    vector<double> log_prices;
+    vector<double> prices;
+    double z = 0;
+    // Our initial mean is the given mean
+    double moving_mean = mean;
+    // Our initial price is also the given mean
+    double log_p = moving_mean;
+
+    // Push initial values into the vector
+    moving_means.push_back(moving_mean);
+    log_prices.push_back(log_p);
+
+    double phi = exp(-theta);
+    double vol_adj =  sqrt((1 - phi * phi) / (2 * theta));
+
+    // Loop 
+    for (int t = 0; t < ticks; ++t) {
+        // Update moving mean
+        moving_mean += mean_vol * random_sample(0,1);
+        moving_means.push_back(moving_mean);
+
+
+        z = random_sample(0.0,1.0);
+        // Update price
+        log_p = moving_mean + (log_p - moving_mean) * phi + (sigma * vol_adj * z);
+        log_prices.push_back(log_p);
+
+        prices.push_back(exp(log_p));
+    }
+
+    if (!verify_drifting_mean(log_prices,moving_means)) {
+        cout << "Something went wrong \n";
+        vector<double> empty = {};
+        return empty;
+    }
+
+    return prices;
+}
 
 void drifting_mean_reversion(string filename, int ticks, double theta, double sigma, double mean_vol, double mean) {
     string fullFileName = "../Mean-Reversion/logs/" + filename + ".csv";

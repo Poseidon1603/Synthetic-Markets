@@ -107,14 +107,42 @@ bool check_trend(vector<double>& log_prices) {
     return true;
 }
 
+vector<double> trending_regime_generator(int ticks, double drift, double sigma, double start_price) {
+    vector<double> prices;
+    vector<double> log_prices;
+
+    double log_p = log(start_price);
+    log_prices.push_back(log_p);
+    prices.push_back(start_price);
+
+    double log_drift = drift - (0.5 * sigma * sigma);
+
+    double z = 0;
+    for ( int t = 0; t < ticks; ++t) {
+        z = random_sample(0,1);
+
+        log_p = log_drift + (sigma * z);
+        log_prices.push_back(log_p);
+
+        prices.push_back(exp(log_p));
+    }
+
+    if (!check_trend(log_prices)) {
+        cout << "Something went wrong \n";
+        vector<double> empty = {};
+        return empty;
+    }
+
+    return prices;
+}
 
 void trending_regime_generator(string filename, int ticks, double drift, double sigma, double start_price) {
     string fullFileName = "../Trending/logs/" + filename + ".csv";
     ofstream file(fullFileName, ios::app);
-    vector<double> prices;
+    vector<double> log_prices;
 
     double log_p = log(start_price);
-    prices.push_back(log_p);
+    log_prices.push_back(log_p);
     
     // For GBM, the expected log price change is (drift - 0.5 * sigma^2)
     double log_drift = drift - (0.5 * sigma * sigma);
@@ -125,7 +153,7 @@ void trending_regime_generator(string filename, int ticks, double drift, double 
         // The core GBM equation in log-space
         // log_p_t = log_p_{t-1} + drift + noise
         log_p += log_drift + (sigma * z);
-        prices.push_back(log_p);
+        log_prices.push_back(log_p);
         
         // time, price, log_price
         file << exp(log_p) << '\n';
@@ -134,7 +162,7 @@ void trending_regime_generator(string filename, int ticks, double drift, double 
 
     cout << "Running Checks on Output \n";
 
-    if (!check_trend(prices)) {
+    if (!check_trend(log_prices)) {
         return;
     }
 

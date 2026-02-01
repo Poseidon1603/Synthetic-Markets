@@ -4,29 +4,6 @@
 using namespace std;
 
 
-// int main(int argc, const char *argv[]) {
-//     int x;
-//     if (argc == 1) {
-//         cout << "Give me more parameters pls" << '\n';
-//         return 0;
-//     } else if (argc == 2) {
-//         cout << "Deleting Previous Attempts" << '\n';
-//         delete_previous("mean-reversion-log.csv", "../Mean-Reversion/logs");
-//         cout << "Making 1 Mean Reversion for " << argv[1] << " days" << '\n';
-//         // Make the mean reversion
-//         x = stable_mean_reversion("mean-reversion-log", arg[1], );
-
-
-//     } else if (argc == 3) {
-//         cout << "Deleting Previous Attempts" << '\n';
-//         delete_previous("mean-reversion-log-", "../Mean-Reversion/logs");
-//         cout << "Making " << argv[2] << " Mean Reversions for " << argv[1] << " days" << '\n';
-//         for (int i = 0; i < stoi(argv[2]); i++) {
-//             // Make the mean reversion for every i
-//         }
-//     }
-// }
-
 int main(void) {
     string tmp;
     int x;

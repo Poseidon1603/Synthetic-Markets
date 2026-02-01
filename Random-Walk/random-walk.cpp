@@ -54,3 +54,27 @@ int random_walk(string fileName, string days) {
     }
     return 0;
 }
+
+vector<double> random_walk(int ticks) {
+    vector<double> prices;
+    vector<double> incr_values;
+    double price = 0;
+
+    double incr_value = 0;
+    for (int t = 0; t < ticks; ++t) {
+        incr_value = random_sample(0,1);
+        incr_values.push_back(incr_value);
+
+        price += incr_value;
+        prices.push_back(incr_value);
+    }
+
+    // Check mean of increments 
+    if (!check_increment_mean(incr_values)) {
+        cout << "Mean is not approx 0 \n";
+        vector<double> empty = {};
+        return empty;
+    }
+
+    return prices;
+}
